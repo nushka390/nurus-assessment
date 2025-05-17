@@ -1,0 +1,214 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: hsl(235, 21%, 11%);
+  color: hsl(234, 39%, 85%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.theme-light {
+  background-color: hsl(0, 0%, 98%);
+  color: hsl(235, 19%, 35%);
+}
+
+.app-background {
+  background: url("images/bg-desktop-dark.jpg") no-repeat top center;
+  background-size: cover;
+  height: 300px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+body.theme-light .app-background {
+  background-image: url("images/bg-desktop-light.jpg");
+}
+
+.container {
+  max-width: 550px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  z-index: 1;
+  flex: 1 0 auto;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 12px;
+  font-size: 1.5rem;
+}
+
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-btn img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+  transition: filter 0.3s ease;
+}
+
+body.theme-light .theme-toggle-btn img {
+  filter: none;
+}
+
+#task-form input {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 5px;
+  background: hsl(235, 24%, 19%);
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+body.theme-light #task-form input {
+  background: white;
+  color: hsl(235, 19%, 35%);
+}
+
+.task-list li {
+  display: flex;
+  align-items: center;
+  background: hsl(235, 24%, 19%);
+  padding: 1rem;
+  margin-bottom: 1px;
+  border-bottom: 1px solid hsl(233, 14%, 35%);
+  transition: background 0.3s;
+}
+
+body.theme-light .task-list li {
+  background: white;
+  border-color: hsl(233, 11%, 84%);
+}
+
+.task-list li.completed .task-text {
+  text-decoration: line-through;
+  color: hsl(233, 14%, 35%);
+}
+
+.check-btn {
+  width: 20px;
+  height: 20px;
+  border: 1px solid hsl(233, 14%, 35%);
+  border-radius: 50%;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.task-list li.completed .check-btn {
+  background: url('images/icon-check.svg') center center no-repeat, linear-gradient(to right, hsl(192, 100%, 67%), hsl(280, 87%, 65%));
+  border: none;
+}
+
+.task-text {
+  flex-grow: 1;
+}
+
+.remove-btn {
+  width: 18px;
+  height: 18px;
+  background: url('images/icon-cross.svg') center center no-repeat;
+  cursor: pointer;
+}
+
+#btn-clear-completed {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0.3rem 0.6rem;
+}
+
+#btn-clear-completed:hover {
+  color: hsl(220, 98%, 61%);
+  text-decoration: underline;
+}
+
+.task-footer {
+  background: hsl(235, 24%, 19%);
+  color: hsl(234, 39%, 85%);
+  padding: 1rem 1.5rem;
+  font-size: 0.875rem;
+  border-radius: 0 0 5px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+}
+
+body.theme-light .task-footer {
+  background: white;
+  color: hsl(235, 19%, 35%);
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.filter-buttons button {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.3rem 0.8rem;
+}
+
+.filter-buttons button.active {
+  color: hsl(220, 98%, 61%);
+}
+
+button:hover {
+  opacity: 0.7;
+}
+
+.reorder-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: hsl(234, 11%, 52%);
+  padding: 1rem 0;
+  margin-top: auto;
+}
+
+body.theme-light .reorder-hint {
+  color: hsl(236, 9%, 61%);
+}
+
+@media (max-width: 600px) {
+  .main-container {
+    padding: 1rem;
+  }
+
+  .task-footer {
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .filter-buttons {
+    font-size: 0.8rem;
+    gap: 1rem;
+  }
+}
