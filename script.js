@@ -1,93 +1,108 @@
-const taskForm = document.getElementById('task-form');
-const taskInput = document.getElementById('task-input');
-const taskList = document.getElementById('task-list');
-const taskCount = document.getElementById('task-count');
-const clearCompletedBtn = document.getElementById('btn-clear-completed');
+const todoForm = document.getElementById('todo-form');
+const todoInput = document.getElementById('todo-input');
+const todoList = document.getElementById('todo-list');
+const itemsCounter = document.getElementById('items-count');
+const clearCompletedButton = document.getElementById('clear-completed-btn');
 const filterButtons = document.querySelectorAll('.filter-buttons button');
-const themeToggleBtn = document.querySelector('.theme-toggle-btn');
-const body = document.body;
+const themeToggleButton = document.querySelector('.theme-toggle-btn');
+const pageBody = document.body;
 
-let tasks = [];
-let currentFilter = 'all';
+let todos = [];
+let activeFilter = 'all';
 
-taskForm.addEventListener('submit', function (e) {
-  e.preventDefault();
-  const text = taskInput.value.trim();
-  if (text) {
-    tasks.push({ id: Date.now(), text: text, completed: false });
-    taskInput.value = '';
-    renderTasks();
+// Handle form submission for new todos
+todoForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const taskText = todoInput.value.trim();
+  
+  if (taskText) {
+    todos.push({
+      id: Date.now(),
+      text: taskText,
+      completed: false
+    });
+    todoInput.value = '';
+    renderTodoList();
   }
 });
 
-taskList.addEventListener('click', function (e) {
-  const li = e.target.closest('li');
-  if (!li) return;
-  const id = Number(li.dataset.id);
+// Handle todo list interactions
+todoList.addEventListener('click', (event) => {
+  const listItem = event.target.closest('li');
+  if (!listItem) return;
+  
+  const todoId = Number(listItem.dataset.id);
 
-  if (e.target.classList.contains('check-btn')) {
-    for (let i = 0; i < tasks.length; i++) {
-      if (tasks[i].id === id) {
-        tasks[i].completed = !tasks[i].completed;
-        break;
-      }
-    }
+  // Toggle completion status
+  if (event.target.classList.contains('check-btn')) {
+    const todo = todos.find(item => item.id === todoId);
+    if (todo) todo.completed = !todo.completed;
   }
 
-  if (e.target.classList.contains('remove-btn')) {
-    tasks = tasks.filter(task => task.id !== id);
+  // Remove todo item
+  if (event.target.classList.contains('remove-btn')) {
+    todos = todos.filter(item => item.id !== todoId);
   }
 
-  renderTasks();
+  renderTodoList();
 });
 
+// Set up filter buttons
 filterButtons.forEach(button => {
-  button.addEventListener('click', function () {
-    currentFilter = this.textContent.toLowerCase();
+  button.addEventListener('click', () => {
+    activeFilter = button.textContent.toLowerCase();
     filterButtons.forEach(btn => btn.classList.remove('active'));
-    this.classList.add('active');
-    renderTasks();
+    button.classList.add('active');
+    renderTodoList();
   });
 });
 
-clearCompletedBtn.addEventListener('click', function () {
-  tasks = tasks.filter(task => !task.completed);
-  renderTasks();
+// Clear completed todos
+clearCompletedButton.addEventListener('click', () => {
+  todos = todos.filter(todo => !todo.completed);
+  renderTodoList();
 });
 
-themeToggleBtn.addEventListener('click', function () {
-  body.classList.toggle('theme-dark');
-  body.classList.toggle('theme-light');
-  const icon = themeToggleBtn.querySelector('img');
-  icon.src = body.classList.contains('theme-dark')
+// Toggle between light/dark theme
+themeToggleButton.addEventListener('click', () => {
+  pageBody.classList.toggle('theme-dark');
+  pageBody.classList.toggle('theme-light');
+  
+  const themeIcon = themeToggleButton.querySelector('img');
+  themeIcon.src = pageBody.classList.contains('theme-dark')
     ? 'images/icon-sun.svg'
     : 'images/icon-moon.svg';
 });
 
-function renderTasks() {
-  taskList.innerHTML = '';
+// Render the todo list based on current filter
+function renderTodoList() {
+  todoList.innerHTML = '';
 
-  const filtered = tasks.filter(function (task) {
-    if (currentFilter === 'all') return true;
-    if (currentFilter === 'active') return !task.completed;
-    if (currentFilter === 'completed') return task.completed;
+  const filteredTodos = todos.filter(todo => {
+    switch (activeFilter) {
+      case 'active': return !todo.completed;
+      case 'completed': return todo.completed;
+      default: return true;
+    }
   });
 
-  filtered.forEach(task => {
-    const li = document.createElement('li');
-    li.dataset.id = task.id;
-    if (task.completed) {
-      li.classList.add('completed');
+  filteredTodos.forEach(todo => {
+    const listItem = document.createElement('li');
+    listItem.dataset.id = todo.id;
+    
+    if (todo.completed) {
+      listItem.classList.add('completed');
     }
 
-    li.innerHTML =
-      '<span class="check-btn"></span>' +
-      '<span class="task-text">' + task.text + '</span>' +
-      '<span class="remove-btn"></span>';
+    listItem.innerHTML = `
+      <span class="check-btn"></span>
+      <span class="task-text">${todo.text}</span>
+      <span class="remove-btn"></span>
+    `;
 
-    taskList.appendChild(li);
+    todoList.appendChild(listItem);
   });
 
-  const count = tasks.filter(task => !task.completed).length;
-  taskCount.textContent = count + ' item' + (count !== 1 ? 's' : '') + ' left';
+  const activeTodosCount = todos.filter(todo => !todo.completed).length;
+  itemsCounter.textContent = `${activeTodosCount} item${activeTodosCount !== 1 ? 's' : ''} left`;
 }
